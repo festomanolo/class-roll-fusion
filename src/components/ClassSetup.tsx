@@ -171,11 +171,12 @@ export function ClassSetup({ classes, onClassCreate, onSessionStart }: ClassSetu
                 key={cls.id}
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
-                className={`p-4 rounded-lg border-2 cursor-pointer transition-all ${
-                  selectedClass?.id === cls.id
-                    ? 'border-primary bg-primary/10'
-                    : 'border-transparent bg-muted/20 hover:bg-muted/30'
-                }`}
+            className={`p-4 border-2 cursor-pointer transition-all ${
+              selectedClass?.id === cls.id
+                ? 'border-primary bg-primary/10'
+                : 'border-transparent bg-muted/20 hover:bg-muted/30'
+            }`}
+            style={{ borderRadius: 'var(--radius-lg)' }}
                 onClick={() => setSelectedClass(cls)}
               >
                 <div className="flex justify-between items-center">
@@ -207,7 +208,7 @@ export function ClassSetup({ classes, onClassCreate, onSessionStart }: ClassSetu
               Start Attendance Session
             </h2>
             
-            <div className="mb-4 p-3 bg-primary/10 rounded-lg">
+            <div className="mb-4 p-3 bg-primary/10" style={{ borderRadius: 'var(--radius-lg)' }}>
               <p className="text-sm text-muted-foreground">Selected Class:</p>
               <p className="font-semibold">{selectedClass.name} - {selectedClass.subject}</p>
             </div>

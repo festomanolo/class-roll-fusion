@@ -164,11 +164,15 @@ const Index = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
-              className="relative overflow-hidden rounded-2xl mb-8"
+              className="relative overflow-hidden mb-8"
+              style={{ borderRadius: 'var(--radius-xl)' }}
             >
               <div 
                 className="h-64 bg-cover bg-center relative"
-                style={{ backgroundImage: `url(${heroImage})` }}
+                style={{ 
+                  backgroundImage: `url(${heroImage})`,
+                  borderRadius: 'var(--radius-xl)'
+                }}
               >
                 <div className="absolute inset-0 bg-gradient-to-r from-primary/80 to-primary-glow/60" />
                 <div className="relative z-10 p-8 text-white">
@@ -177,9 +181,9 @@ const Index = () => {
                     Modern attendance management with glassmorphism design
                   </p>
                   <div className="flex gap-2 text-sm">
-                    <span className="px-3 py-1 bg-white/20 rounded-full">📱 Mobile Ready</span>
-                    <span className="px-3 py-1 bg-white/20 rounded-full">🎯 Smart Roller</span>
-                    <span className="px-3 py-1 bg-white/20 rounded-full">📊 CSV Export</span>
+                  <span className="px-3 py-1 bg-white/20" style={{ borderRadius: 'var(--radius-lg)' }}>📱 Mobile Ready</span>
+                  <span className="px-3 py-1 bg-white/20" style={{ borderRadius: 'var(--radius-lg)' }}>🎯 Smart Roller</span>
+                  <span className="px-3 py-1 bg-white/20" style={{ borderRadius: 'var(--radius-lg)' }}>📊 CSV Export</span>
                   </div>
                 </div>
               </div>
@@ -338,15 +342,15 @@ const Index = () => {
                   App settings and preferences will be available in future updates.
                 </p>
                 <div className="space-y-4 text-left">
-                  <div className="p-4 bg-muted/20 rounded-lg">
+                  <div className="p-4 bg-muted/20" style={{ borderRadius: 'var(--radius-lg)' }}>
                     <h3 className="font-semibold mb-2">Mobile App Instructions</h3>
                     <div className="text-sm text-muted-foreground space-y-1">
                       <p>1. Export project to GitHub</p>
-                      <p>2. Git pull and run <code className="bg-muted px-1 rounded">npm install</code></p>
-                      <p>3. Add platforms: <code className="bg-muted px-1 rounded">npx cap add ios/android</code></p>
-                      <p>4. Build: <code className="bg-muted px-1 rounded">npm run build</code></p>
-                      <p>5. Sync: <code className="bg-muted px-1 rounded">npx cap sync</code></p>
-                      <p>6. Run: <code className="bg-muted px-1 rounded">npx cap run ios/android</code></p>
+                      <p>2. Git pull and run <code className="bg-muted px-1" style={{ borderRadius: 'var(--radius-sm)' }}>npm install</code></p>
+                      <p>3. Add platforms: <code className="bg-muted px-1" style={{ borderRadius: 'var(--radius-sm)' }}>npx cap add ios/android</code></p>
+                      <p>4. Build: <code className="bg-muted px-1" style={{ borderRadius: 'var(--radius-sm)' }}>npm run build</code></p>
+                      <p>5. Sync: <code className="bg-muted px-1" style={{ borderRadius: 'var(--radius-sm)' }}>npx cap sync</code></p>
+                      <p>6. Run: <code className="bg-muted px-1" style={{ borderRadius: 'var(--radius-sm)' }}>npx cap run ios/android</code></p>
                     </div>
                   </div>
                 </div>

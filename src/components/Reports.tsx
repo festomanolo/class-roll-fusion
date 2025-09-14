@@ -181,7 +181,7 @@ export function Reports({ classes, sessions }: ReportsProps) {
             
             <div>
               <h3 className="font-semibold mb-2">Data Format</h3>
-              <div className="bg-muted/20 p-3 rounded text-xs font-mono">
+              <div className="bg-muted/20 p-3 text-xs font-mono" style={{ borderRadius: 'var(--radius-md)' }}>
                 Date | Class | Topic | Subtopic | Student Name | Present/Absent
               </div>
               <p className="text-sm text-muted-foreground mt-2">
@@ -225,7 +225,8 @@ export function Reports({ classes, sessions }: ReportsProps) {
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: index * 0.1 }}
-                    className="flex items-center justify-between p-4 bg-muted/20 rounded-lg"
+                    className="flex items-center justify-between p-4 bg-muted/20"
+                    style={{ borderRadius: 'var(--radius-lg)' }}
                   >
                     <div>
                       <h4 className="font-medium">{session.topic}</h4>

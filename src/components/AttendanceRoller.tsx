@@ -125,7 +125,7 @@ export function AttendanceRoller({ students, onComplete, onCancel }: AttendanceR
           Current Student
         </h3>
         
-        <div className="relative h-24 mb-8 overflow-hidden rounded-xl bg-muted/20">
+        <div className="relative h-24 mb-8 overflow-hidden bg-muted/20" style={{ borderRadius: 'var(--radius-lg)' }}>
           <AnimatePresence mode="wait">
             <motion.div
               key={showingStudent?.id || 'empty'}

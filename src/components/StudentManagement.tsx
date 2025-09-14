@@ -327,7 +327,8 @@ export function StudentManagement({
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: index * 0.05 }}
-                    className="flex items-center justify-between p-3 bg-muted/20 rounded-lg hover:bg-muted/30 transition-colors"
+                    className="flex items-center justify-between p-3 bg-muted/20 hover:bg-muted/30 transition-colors"
+                    style={{ borderRadius: 'var(--radius-lg)' }}
                   >
                     <div>
                       <h4 className="font-medium">{student.name}</h4>
