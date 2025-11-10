@@ -1,73 +1,103 @@
-# Welcome to your Lovable project
+# Class Roll Fusion
 
-## Project info
+A comprehensive, modern attendance management system designed for educational institutions. Built with React, TypeScript, and Capacitor for cross-platform compatibility.
 
-**URL**: https://lovable.dev/projects/1cf43f2e-0ba7-4a6e-a6ab-9e5fd5d47df7
+## Features
 
-## How can I edit this code?
+- **Student Management**: Add, edit, and organize student information with ease
+- **Attendance Tracking**: Real-time attendance marking with intuitive interface
+- **Class Organization**: Create and manage multiple classes and subjects
+- **Exam Management**: Record and track student exam results
+- **Data Export**: Export attendance and performance data to spreadsheets
+- **Cross-Platform**: Works on web, iOS, and Android devices
+- **Modern UI**: Glassmorphism design with responsive layout
 
-There are several ways of editing your application.
+## Tech Stack
 
-**Use Lovable**
+- **Frontend**: React 18, TypeScript, Vite
+- **UI Framework**: Tailwind CSS, shadcn/ui components
+- **Mobile**: Capacitor for native iOS/Android apps
+- **State Management**: React hooks and local storage
+- **Build Tools**: Vite, ESLint, TypeScript
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/1cf43f2e-0ba7-4a6e-a6ab-9e5fd5d47df7) and start prompting.
+## Getting Started
 
-Changes made via Lovable will be committed automatically to this repo.
+### Prerequisites
 
-**Use your preferred IDE**
+- Node.js (v16 or higher)
+- npm or yarn package manager
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+### Installation
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+1. Clone the repository:
+```bash
+git clone https://github.com/festomanolo/class-roll-fusion.git
+cd class-roll-fusion
+```
 
-Follow these steps:
+2. Install dependencies:
+```bash
+npm install
+```
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
+3. Start the development server:
+```bash
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+4. Open [http://localhost:5173](http://localhost:5173) in your browser
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+### Building for Production
 
-**Use GitHub Codespaces**
+```bash
+npm run build
+```
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+### Mobile App Development
 
-## What technologies are used for this project?
+#### iOS
+```bash
+npx cap add ios
+npx cap open ios
+```
 
-This project is built with:
+#### Android
+```bash
+npx cap add android
+npx cap open android
+```
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+## Project Structure
 
-## How can I deploy this project?
+```
+src/
+├── components/          # Reusable UI components
+│   ├── ui/             # Base UI components (shadcn/ui)
+│   └── ...             # Feature-specific components
+├── pages/              # Page components
+├── services/           # Business logic and API services
+├── hooks/              # Custom React hooks
+├── lib/                # Utility functions
+├── types/              # TypeScript type definitions
+└── data/               # Static data and configurations
+```
 
-Simply open [Lovable](https://lovable.dev/projects/1cf43f2e-0ba7-4a6e-a6ab-9e5fd5d47df7) and click on Share -> Publish.
+## Contributing
 
-## Can I connect a custom domain to my Lovable project?
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
-Yes, you can!
+## License
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+## Contact
+
+For questions or support, please open an issue on GitHub.
+
+---
+
+Built with ❤️ for educators worldwide
