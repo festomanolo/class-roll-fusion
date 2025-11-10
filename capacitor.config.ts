@@ -1,20 +1,26 @@
 import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'app.lovable.1cf43f2e0ba74a6ea6ab9e5fd5d47df7',
-  appName: 'TeacherMate - Attendance Manager',
+  appId: 'com.manolo.classroll',
+  appName: 'Class-Roll',
   webDir: 'dist',
   bundledWebRuntime: false,
-  server: {
-    url: "https://1cf43f2e-0ba7-4a6e-a6ab-9e5fd5d47df7.lovableproject.com?forceHideBadge=true",
-    cleartext: true
-  },
   plugins: {
     Camera: {
       permissions: ['camera']
     },
     Filesystem: {
       permissions: ['photos']
+    },
+    SplashScreen: {
+      launchShowDuration: 2000,
+      launchAutoHide: true,
+      backgroundColor: "#FFFFFF",
+      androidSplashResourceName: "splash",
+      androidScaleType: "CENTER_CROP",
+      showSpinner: false,
+      splashFullScreen: true,
+      splashImmersive: true
     }
   }
 };

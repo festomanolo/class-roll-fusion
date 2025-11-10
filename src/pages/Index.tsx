@@ -1,25 +1,57 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Navigation } from "@/components/Navigation";
+import { AppLayout } from "@/components/AppLayout";
 import { ClassSetup } from "@/components/ClassSetup";
-import { StudentManagement } from "@/components/StudentManagement";
-import { AttendanceRoller } from "@/components/AttendanceRoller";
+import { Navigation } from "@/components/Navigation";
+// Students tab removed; student management lives inside class details
+import { EnhancedAttendanceRoller } from "@/components/EnhancedAttendanceRoller";
 import { Reports } from "@/components/Reports";
+import { Plans } from "@/components/Plans";
+import { TeacherDashboard } from "@/components/TeacherDashboard";
 import { GlassCard } from "@/components/ui/glass-card";
+import { AppHeader } from "../components/AppHeader";
+import { ContentBox } from "@/components/ui/content-box";
+import Settings from "./Settings";
+import Subjects from "./Subjects";
 import { Button } from "@/components/ui/button";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
-import { Class, Session, Student } from "@/types";
-import { useToast } from "@/hooks/use-toast";
+import { Class, Session, Student, ExtracurricularClub } from "@/types";
+import { useToast } from "@/components/ui/tiktok-toast";
 import { BookOpen, Users, Target, Sparkles } from "lucide-react";
 import heroImage from "@/assets/hero-image.jpg";
 
 const Index = () => {
   const [activeTab, setActiveTab] = useState("home");
+  
+  const handleTabChange = (tab: string) => {
+    setActiveTab(tab);
+  };
   const [classes, setClasses] = useLocalStorage<Class[]>("classes", []);
+  const [clubs, setClubs] = useLocalStorage<ExtracurricularClub[]>("clubs", []);
   const [sessions, setSessions] = useLocalStorage<Session[]>("sessions", []);
   const [currentSession, setCurrentSession] = useState<Session | null>(null);
   const [isRollerActive, setIsRollerActive] = useState(false);
-  const { toast } = useToast();
+  const { addToast } = useToast();
+  
+  // Get the current page title and subtitle
+  const getPageInfo = () => {
+    switch (activeTab) {
+      case 'home':
+        return { title: 'Class-Roll', subtitle: 'Welcome back!' };
+      case 'classes':
+        return { title: 'Classes', subtitle: 'Manage your classes' };
+      case 'plans':
+        return { title: 'Plans', subtitle: 'Lesson plans, timetable, tests & quizzes' };
+      case 'subjects':
+        return { title: 'Subjects', subtitle: 'Manage teaching subjects and topics' };
+      case 'reports':
+        return { title: 'Reports', subtitle: 'View attendance reports' };
+      case 'settings':
+        return { title: 'Settings', subtitle: 'App preferences' };
+      default:
+        return { title: 'Class-Roll', subtitle: '' };
+    }
+  };
 
   // Generate unique IDs
   const generateId = () => `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
@@ -33,6 +65,16 @@ const Index = () => {
     setClasses(prev => [...prev, newClass]);
   };
 
+  const handleClubCreate = (clubData: Omit<ExtracurricularClub, 'id' | 'created_at' | 'updated_at'>) => {
+    const newClub: ExtracurricularClub = {
+      ...clubData,
+      id: generateId(),
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    };
+    setClubs(prev => [...prev, newClub]);
+  };
+
   const handleSessionStart = (sessionData: Omit<Session, 'id'>) => {
     const session: Session = {
       ...sessionData,
@@ -42,7 +84,7 @@ const Index = () => {
     setIsRollerActive(true);
   };
 
-  const handleAttendanceComplete = (attendance: Record<string, boolean>) => {
+  const handleAttendanceComplete = (attendance: Record<string, boolean | import("@/types").AttendanceStatus>) => {
     if (!currentSession) return;
 
     const completedSession: Session = {
@@ -54,7 +96,8 @@ const Index = () => {
     setIsRollerActive(false);
     setCurrentSession(null);
     
-    toast({
+    addToast({
+      type: "success",
       title: "Attendance Completed! ✅",
       description: `Session "${completedSession.topic}" has been saved successfully`,
     });
@@ -63,7 +106,8 @@ const Index = () => {
   const handleAttendanceCancel = () => {
     setIsRollerActive(false);
     setCurrentSession(null);
-    toast({
+    addToast({
+      type: "info",
       title: "Attendance Cancelled",
       description: "Returning to class setup",
     });
@@ -146,7 +190,7 @@ const Index = () => {
             </p>
           </motion.div>
 
-          <AttendanceRoller
+          <EnhancedAttendanceRoller
             students={currentClass.students}
             onComplete={handleAttendanceComplete}
             onCancel={handleAttendanceCancel}
@@ -158,142 +202,11 @@ const Index = () => {
     switch (activeTab) {
       case "home":
         return (
-          <div className="pb-24">
-            {/* Hero Section */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              className="relative overflow-hidden mb-8"
-              style={{ borderRadius: 'var(--radius-xl)' }}
-            >
-              <div 
-                className="h-64 bg-cover bg-center relative"
-                style={{ 
-                  backgroundImage: `url(${heroImage})`,
-                  borderRadius: 'var(--radius-xl)'
-                }}
-              >
-                <div className="absolute inset-0 bg-gradient-to-r from-primary/80 to-primary-glow/60" />
-                <div className="relative z-10 p-8 text-white">
-                  <h1 className="text-4xl font-bold mb-2">TeacherMate</h1>
-                  <p className="text-lg opacity-90 mb-4">
-                    Modern attendance management with glassmorphism design
-                  </p>
-                  <div className="flex gap-2 text-sm">
-                  <span className="px-3 py-1 bg-white/20" style={{ borderRadius: 'var(--radius-lg)' }}>📱 Mobile Ready</span>
-                  <span className="px-3 py-1 bg-white/20" style={{ borderRadius: 'var(--radius-lg)' }}>🎯 Smart Roller</span>
-                  <span className="px-3 py-1 bg-white/20" style={{ borderRadius: 'var(--radius-lg)' }}>📊 CSV Export</span>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-
-            {/* Quick Stats */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.1 }}
-              >
-                <GlassCard className="p-6 text-center">
-                  <BookOpen className="w-8 h-8 mx-auto mb-3 text-primary" />
-                  <h3 className="text-2xl font-bold">{classes.length}</h3>
-                  <p className="text-sm text-muted-foreground">Active Classes</p>
-                </GlassCard>
-              </motion.div>
-
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2 }}
-              >
-                <GlassCard className="p-6 text-center">
-                  <Users className="w-8 h-8 mx-auto mb-3 text-success" />
-                  <h3 className="text-2xl font-bold">
-                    {classes.reduce((sum, cls) => sum + cls.students.length, 0)}
-                  </h3>
-                  <p className="text-sm text-muted-foreground">Total Students</p>
-                </GlassCard>
-              </motion.div>
-
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3 }}
-              >
-                <GlassCard className="p-6 text-center">
-                  <Target className="w-8 h-8 mx-auto mb-3 text-warning" />
-                  <h3 className="text-2xl font-bold">{sessions.length}</h3>
-                  <p className="text-sm text-muted-foreground">Sessions Completed</p>
-                </GlassCard>
-              </motion.div>
-            </div>
-
-            {/* Quick Actions */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4 }}
-            >
-              <GlassCard className="p-6">
-                <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
-                  <Sparkles className="w-5 h-5" />
-                  Quick Actions
-                </h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <Button
-                    onClick={() => setActiveTab("classes")}
-                    className="h-16 text-left justify-start bg-gradient-to-r from-primary to-primary-glow hover:shadow-lg"
-                  >
-                    <BookOpen className="w-5 h-5 mr-3" />
-                    <div>
-                      <div className="font-semibold">Start Attendance</div>
-                      <div className="text-xs opacity-90">Take attendance with the smart roller</div>
-                    </div>
-                  </Button>
-                  
-                  <Button
-                    onClick={() => setActiveTab("students")}
-                    variant="outline"
-                    className="h-16 text-left justify-start"
-                  >
-                    <Users className="w-5 h-5 mr-3" />
-                    <div>
-                      <div className="font-semibold">Manage Students</div>
-                      <div className="text-xs text-muted-foreground">Add, edit, or import students</div>
-                    </div>
-                  </Button>
-                </div>
-              </GlassCard>
-            </motion.div>
-
-            {/* Features List */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5 }}
-              className="mt-8"
-            >
-              <GlassCard className="p-6">
-                <h2 className="text-xl font-semibold mb-4">Features</h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-                  <div className="space-y-2">
-                    <p>🎰 Slot-machine style attendance roller</p>
-                    <p>📱 Cross-platform mobile support (iOS & Android)</p>
-                    <p>🎨 MacOS-inspired glassmorphism design</p>
-                    <p>📊 CSV export for spreadsheet integration</p>
-                  </div>
-                  <div className="space-y-2">
-                    <p>👥 Student management with bulk import</p>
-                    <p>📈 Attendance reports and analytics</p>
-                    <p>💾 Offline-first with local storage</p>
-                    <p>⚡ Smooth animations and spring physics</p>
-                  </div>
-                </div>
-              </GlassCard>
-            </motion.div>
-          </div>
+          <TeacherDashboard 
+            classes={classes}
+            sessions={sessions}
+            onNavigate={setActiveTab}
+          />
         );
 
       case "classes":
@@ -301,22 +214,29 @@ const Index = () => {
           <div className="pb-24">
             <ClassSetup 
               classes={classes}
+              clubs={clubs}
+              sessions={sessions}
               onClassCreate={handleClassCreate}
+              onClubCreate={handleClubCreate}
               onSessionStart={handleSessionStart}
+              onStudentAdd={handleStudentAdd}
+              onStudentEdit={handleStudentEdit}
+              onStudentDelete={handleStudentDelete}
             />
           </div>
         );
 
-      case "students":
+      case "plans":
+        return (
+          <div className="pb-28">
+            <Plans />
+          </div>
+        );
+
+      case "subjects":
         return (
           <div className="pb-24">
-            <StudentManagement
-              classes={classes}
-              onStudentAdd={handleStudentAdd}
-              onStudentEdit={handleStudentEdit}
-              onStudentDelete={handleStudentDelete}
-              onBulkImport={handleBulkImport}
-            />
+            <Subjects />
           </div>
         );
 
@@ -328,46 +248,23 @@ const Index = () => {
         );
 
       case "settings":
-        return (
-          <div className="pb-24">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              className="max-w-2xl mx-auto"
-            >
-              <GlassCard className="p-6 text-center">
-                <h1 className="text-2xl font-bold gradient-text mb-4">Settings</h1>
-                <p className="text-muted-foreground mb-6">
-                  App settings and preferences will be available in future updates.
-                </p>
-                <div className="space-y-4 text-left">
-                  <div className="p-4 bg-muted/20" style={{ borderRadius: 'var(--radius-lg)' }}>
-                    <h3 className="font-semibold mb-2">Mobile App Instructions</h3>
-                    <div className="text-sm text-muted-foreground space-y-1">
-                      <p>1. Export project to GitHub</p>
-                      <p>2. Git pull and run <code className="bg-muted px-1" style={{ borderRadius: 'var(--radius-sm)' }}>npm install</code></p>
-                      <p>3. Add platforms: <code className="bg-muted px-1" style={{ borderRadius: 'var(--radius-sm)' }}>npx cap add ios/android</code></p>
-                      <p>4. Build: <code className="bg-muted px-1" style={{ borderRadius: 'var(--radius-sm)' }}>npm run build</code></p>
-                      <p>5. Sync: <code className="bg-muted px-1" style={{ borderRadius: 'var(--radius-sm)' }}>npx cap sync</code></p>
-                      <p>6. Run: <code className="bg-muted px-1" style={{ borderRadius: 'var(--radius-sm)' }}>npx cap run ios/android</code></p>
-                    </div>
-                  </div>
-                </div>
-              </GlassCard>
-            </motion.div>
-          </div>
-        );
+        return <Settings />;
 
       default:
         return null;
     }
   };
 
+  const { title, subtitle } = getPageInfo();
+
   return (
-    <div className="min-h-screen bg-background">
-      <div className="container mx-auto px-4 py-6">
-        {renderContent()}
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col">
+      <AppHeader title={title} subtitle={subtitle} />
+      
+      <div className="flex-1 relative overflow-y-auto">
+        <div className={`h-full px-4 pt-6 pb-6 ${activeTab === 'classes' ? 'bg-gray-100 dark:bg-gray-950' : ''}`}>
+          {renderContent()}
+        </div>
       </div>
       
       <Navigation activeTab={activeTab} onTabChange={setActiveTab} />

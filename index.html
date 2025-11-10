@@ -1,24 +1,34 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>TeacherMate - Modern Attendance Management</title>
-    <meta name="description" content="Cross-platform mobile app for teachers to manage attendance and exam marks with modern MacOS-like glassmorphism UI" />
-    <meta name="author" content="Lovable" />
 
-    <meta property="og:title" content="TeacherMate - Attendance Management App" />
-    <meta property="og:description" content="Modern cross-platform mobile application for teachers featuring attendance roller, student management, and spreadsheet integration" />
-    <meta property="og:type" content="website" />
-    <meta property="og:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Class-Roll - Modern Attendance Management</title>
+  <meta name="description"
+    content="Cross-platform mobile app for teachers to manage attendance and exam marks with modern MacOS-like glassmorphism UI" />
+  <meta name="author" content="Class-Roll Team" />
 
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:site" content="@lovable_dev" />
-    <meta name="twitter:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
-  </head>
+  <meta property="og:title" content="Class-Roll - Attendance Management App" />
+  <meta property="og:description"
+    content="Modern cross-platform mobile application for teachers featuring attendance roller, student management, and spreadsheet integration" />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="/assets/hero-image.jpg" />
 
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:image" content="/assets/hero-image.jpg" />
+
+  <!-- Poppins Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+  <div id="root"></div>
+  <!-- App notification sound (preloaded for web/native fallback) -->
+  <audio id="app-notification-sound" src="/assets/sounds/notification.mp3" preload="auto"></audio>
+  <script type="module" src="/src/main.tsx"></script>
+</body>
+
 </html>

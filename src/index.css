@@ -1,22 +1,52 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import './styles/colors.css';
+@import './styles/apple-design-system.css';
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* MacOS-inspired Glassmorphism Design System */
+@layer components {
+  .ios-blur {
+    backdrop-filter: saturate(180%) blur(20px);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
 
 @layer base {
+  body {
+    font-feature-settings: "ss01", "ss02", "cv01", "cv02", "cv03", "cv04";
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
+  /* iOS/macOS style focus rings */
+  :focus {
+    outline: none;
+    --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);
+    --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);
+    box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
+    --tw-ring-opacity: 0.5;
+    --tw-ring-color: rgb(var(--primary) / var(--tw-ring-opacity));
+  }
+  
+  /* Smooth scrolling */
+  * {
+    scroll-behavior: smooth;
+  }
+
+  /* iOS/macOS style selection */
+  ::selection {
+    background-color: rgb(var(--primary) / 0.2);
+    color: rgb(var(--primary-foreground));
+  }
   :root {
-    /* Primary Brand - Education Blue */
-    --primary: 213 93% 67%;
-    --primary-foreground: 0 0% 100%;
-    --primary-glow: 213 93% 80%;
-    
-    /* Glassmorphism Background */
-    --background: 220 15% 97%;
-    --foreground: 220 15% 15%;
-    
     /* Glass Cards */
     --glass: 0 0% 100%;
     --glass-border: 220 15% 85%;
@@ -66,12 +96,30 @@
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     --transition-spring: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     
-    /* macOS-style Corner Radius */
-    --radius: 1.25rem;
-    --radius-sm: 0.75rem;
-    --radius-md: 1rem;
-    --radius-lg: 1.5rem;
-    --radius-xl: 2rem;
+    /* macOS/iOS-style Corner Radius */
+    --radius: 0.75rem;
+    --radius-sm: 0.5rem;
+    --radius-md: 0.75rem;
+    --radius-lg: 1rem;
+    --radius-xl: 1.25rem;
+    
+    /* macOS/iOS-style Shadows */
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    
+    /* iOS-style Blur Effects */
+    --blur-sm: blur(8px);
+    --blur-md: blur(12px);
+    --blur-lg: blur(16px);
+    --blur-xl: blur(24px);
+    
+    /* iOS Dynamic Colors */
+    --ios-background: 210 40% 98%;
+    --ios-secondary: 210 40% 96%;
+    --ios-tertiary: 210 40% 94%;
+    --ios-quaternary: 210 40% 92%;
 
     --sidebar-background: 0 0% 98%;
 
@@ -131,6 +179,48 @@
   body {
     @apply bg-background text-foreground font-sans antialiased;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    /* Atmospheric multi-hued radial gradient background */
+    background-image:
+      radial-gradient(1200px 800px at 10% 10%, rgba(173, 216, 230, 0.35), transparent 60%), /* pastel blue */
+      radial-gradient(900px 700px at 90% 15%, rgba(216, 191, 216, 0.3), transparent 60%),  /* lavender */
+      radial-gradient(1000px 700px at 85% 80%, rgba(255, 218, 185, 0.28), transparent 60%), /* peach */
+      radial-gradient(800px 600px at 20% 85%, rgba(152, 251, 152, 0.28), transparent 60%),  /* soft green */
+      radial-gradient(1100px 900px at 50% 50%, rgba(255, 235, 140, 0.22), transparent 70%); /* warm yellow */
+    background-color: hsl(var(--background));
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+
+  /* Extra soft blurred cloud layer for subtle overlapping, dreamy atmosphere */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background-image:
+      radial-gradient(900px 700px at 8% 12%, rgba(173,216,230,0.55), transparent 40%),
+      radial-gradient(700px 600px at 92% 14%, rgba(216,191,216,0.48), transparent 40%),
+      radial-gradient(1000px 800px at 82% 82%, rgba(255,218,185,0.42), transparent 40%),
+      radial-gradient(700px 600px at 18% 82%, rgba(152,251,152,0.42), transparent 40%),
+      radial-gradient(1100px 900px at 50% 50%, rgba(255,235,140,0.36), transparent 50%);
+    filter: blur(48px) saturate(120%);
+    opacity: 0.9;
+    mix-blend-mode: screen;
+  }
+
+  /* Refined dark mode background for elevated contrast and subtle color clouds */
+  .dark body, body.dark {
+    background-image:
+      radial-gradient(1200px 800px at 12% 12%, rgba(72, 99, 160, 0.35), transparent 60%),   /* muted blue */
+      radial-gradient(900px 700px at 88% 18%, rgba(126, 98, 160, 0.28), transparent 60%),   /* muted lavender */
+      radial-gradient(1000px 700px at 80% 78%, rgba(160, 116, 72, 0.22), transparent 60%),  /* warm amber */
+      radial-gradient(800px 600px at 22% 82%, rgba(82, 130, 102, 0.24), transparent 60%);   /* moss green */
+    background-color: hsl(var(--background));
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    background-size: cover;
   }
 
   html {

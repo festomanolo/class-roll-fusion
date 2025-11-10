@@ -1,22 +1,29 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Check, X, SkipForward } from "lucide-react";
+import { Check, X, SkipForward, Heart, FileText, AlertCircle } from "lucide-react";
 import { Button } from "./ui/button";
 import { GlassCard } from "./ui/glass-card";
-import { Student } from "@/types";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
+import { Label } from "./ui/label";
+import { Textarea } from "./ui/textarea";
+import { Student, AttendanceStatus } from "@/types";
 import { useToast } from "@/hooks/use-toast";
+import { playSound } from "@/lib/sound";
 
 interface AttendanceRollerProps {
   students: Student[];
-  onComplete: (attendance: Record<string, boolean>) => void;
+  onComplete: (attendance: Record<string, boolean | AttendanceStatus>) => void;
   onCancel: () => void;
 }
 
 export function AttendanceRoller({ students, onComplete, onCancel }: AttendanceRollerProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isSpinning, setIsSpinning] = useState(false);
-  const [attendance, setAttendance] = useState<Record<string, boolean>>({});
+  const [attendance, setAttendance] = useState<Record<string, boolean | AttendanceStatus>>({});
   const [showingStudent, setShowingStudent] = useState<Student | null>(null);
+  const [showAbsentDialog, setShowAbsentDialog] = useState(false);
+  const [absentReason, setAbsentReason] = useState<'sick' | 'permitted' | 'other'>('sick');
+  const [absentNote, setAbsentNote] = useState('');
   const { toast } = useToast();
 
   useEffect(() => {
@@ -47,32 +54,53 @@ export function AttendanceRoller({ students, onComplete, onCancel }: AttendanceR
     }, 100);
   };
 
-  const markAttendance = (present: boolean) => {
+  const markAttendance = (present: boolean, reason?: 'sick' | 'permitted' | 'other', note?: string) => {
     const currentStudent = students[currentIndex];
     if (!currentStudent) return;
 
+    const attendanceStatus: boolean | AttendanceStatus = present 
+      ? true 
+      : { present: false, reason, note };
+
     const newAttendance = {
       ...attendance,
-      [currentStudent.id]: present
+      [currentStudent.id]: attendanceStatus
     };
     
     setAttendance(newAttendance);
     
     // Success animation and sound feedback
+    const reasonText = reason ? ` (${reason})` : '';
     toast({
-      title: present ? "Present ✓" : "Absent ✗",
+      title: present ? "Present ✓" : `Absent ✗${reasonText}`,
       description: `${currentStudent.name} marked as ${present ? 'present' : 'absent'}`,
       duration: 1500,
     });
 
+    // Reset absent dialog state
+    setAbsentReason('sick');
+    setAbsentNote('');
+    setShowAbsentDialog(false);
+
     // Move to next student or complete
     if (currentIndex + 1 >= students.length) {
-      setTimeout(() => onComplete(newAttendance), 1000);
+      setTimeout(() => {
+        playSound('success');
+        onComplete(newAttendance);
+      }, 1000);
     } else {
       setTimeout(() => {
         setCurrentIndex(currentIndex + 1);
       }, 800);
     }
+  };
+
+  const handleAbsentClick = () => {
+    setShowAbsentDialog(true);
+  };
+
+  const handleAbsentConfirm = () => {
+    markAttendance(false, absentReason, absentNote);
   };
 
   const skipStudent = () => {
@@ -162,7 +190,7 @@ export function AttendanceRoller({ students, onComplete, onCancel }: AttendanceR
           <Button
             variant="destructive"
             size="lg"
-            onClick={() => markAttendance(false)}
+            onClick={handleAbsentClick}
             disabled={isSpinning}
             className="flex flex-col items-center p-6 h-auto"
           >
@@ -199,6 +227,88 @@ export function AttendanceRoller({ students, onComplete, onCancel }: AttendanceR
           Cancel Attendance
         </Button>
       </div>
+
+      {/* Absent Reason Dialog */}
+      <Dialog open={showAbsentDialog} onOpenChange={setShowAbsentDialog}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Mark as Absent</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div>
+              <Label className="text-base font-medium">
+                {showingStudent?.name} - Reason for absence:
+              </Label>
+            </div>
+            
+            <div className="grid grid-cols-1 gap-3">
+              <Button
+                variant={absentReason === 'sick' ? 'default' : 'outline'}
+                onClick={() => setAbsentReason('sick')}
+                className="justify-start h-auto p-4"
+              >
+                <Heart className="w-5 h-5 mr-3 text-red-500" />
+                <div className="text-left">
+                  <div className="font-medium">Sick</div>
+                  <div className="text-sm text-muted-foreground">Student is unwell</div>
+                </div>
+              </Button>
+              
+              <Button
+                variant={absentReason === 'permitted' ? 'default' : 'outline'}
+                onClick={() => setAbsentReason('permitted')}
+                className="justify-start h-auto p-4"
+              >
+                <FileText className="w-5 h-5 mr-3 text-blue-500" />
+                <div className="text-left">
+                  <div className="font-medium">Permitted</div>
+                  <div className="text-sm text-muted-foreground">Authorized absence</div>
+                </div>
+              </Button>
+              
+              <Button
+                variant={absentReason === 'other' ? 'default' : 'outline'}
+                onClick={() => setAbsentReason('other')}
+                className="justify-start h-auto p-4"
+              >
+                <AlertCircle className="w-5 h-5 mr-3 text-orange-500" />
+                <div className="text-left">
+                  <div className="font-medium">Other</div>
+                  <div className="text-sm text-muted-foreground">Other reason</div>
+                </div>
+              </Button>
+            </div>
+
+            <div>
+              <Label htmlFor="note">Additional Note (Optional)</Label>
+              <Textarea
+                id="note"
+                placeholder="Add any additional details..."
+                value={absentNote}
+                onChange={(e) => setAbsentNote(e.target.value)}
+                rows={2}
+              />
+            </div>
+
+            <div className="flex gap-3">
+              <Button
+                variant="outline"
+                onClick={() => setShowAbsentDialog(false)}
+                className="flex-1"
+              >
+                Cancel
+              </Button>
+              <Button
+                onClick={handleAbsentConfirm}
+                variant="destructive"
+                className="flex-1"
+              >
+                Mark Absent
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

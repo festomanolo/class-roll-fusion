@@ -1,0 +1,11 @@
+{
+  "appId": "com.manolo.classroll",
+  "appName": "Class-Roll",
+  "webDir": "dist",
+  "bundledWebRuntime": false,
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 0
+    }
+  }
+}
